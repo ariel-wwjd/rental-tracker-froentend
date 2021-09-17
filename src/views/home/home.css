@@ -1,0 +1,31 @@
+.homeView {
+  background-color: var(--gray-6);
+  height: 100%;
+  padding: 12px 12px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.homeView .logo {
+  color: var(--gray-8);
+  font-size: var(--text-4xl);
+  height: 40%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--gray-1);
+  margin: -12px;
+}
+
+.homeView .form {
+  height: 30%;
+  color: transparent;
+}
+
+.homeView .actions {
+  height: 120px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+}
