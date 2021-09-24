@@ -5,9 +5,12 @@ interface IButtonAction {
   label: string;
   onClick(): void;
   color: string;
+  type?: 'button' | 'submit';
 }
 
-const ButtonAction = ({ label, onClick, color }: IButtonAction) => {
+const ButtonAction = ({
+  label, onClick, color, type,
+}: IButtonAction) => {
   const clickHandler = () => {
     onClick();
   };
@@ -26,12 +29,16 @@ const ButtonAction = ({ label, onClick, color }: IButtonAction) => {
       <button
         className={buttonClasses}
         onClick={clickHandler}
-        type="button"
+        type={type === 'submit' ? 'submit' : 'button'}
       >
         {label}
       </button>
     </div>
   );
+};
+
+ButtonAction.defaultProps = {
+  type: 'button',
 };
 
 export { ButtonAction };

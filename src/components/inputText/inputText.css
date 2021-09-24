@@ -1,0 +1,29 @@
+.inputTextComponent .input {
+  width: 100%;
+  height: 40px;
+  padding: 0px 16px;
+  border-bottom: 1px solid var(--gray-5);
+  font-size: var(--text-l);
+  color: var(--gray-9);
+  background-color: transparent;
+}
+
+.inputTextComponent .input::placeholder {
+  color: var(--gray-5);
+}
+
+.inputTextComponent .input:focus {
+  outline: none;
+  border-bottom: 1px solid var(--gray-9);
+}
+
+.inputTextComponent .input.hasError {
+  border: 1px solid var(--red-0);
+}
+
+.inputTextComponent .error {
+  padding-top: 2px;
+  height: 24px;
+  text-align: end;
+  color: var(--red-0);
+}
