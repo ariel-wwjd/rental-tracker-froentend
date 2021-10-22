@@ -6,10 +6,11 @@ interface IButtonAction {
   onClick(): void;
   color: string;
   type?: 'button' | 'submit';
+  disabled?: boolean;
 }
 
 const ButtonAction = ({
-  label, onClick, color, type,
+  label, onClick, color, type, disabled,
 }: IButtonAction) => {
   const clickHandler = () => {
     onClick();
@@ -30,6 +31,7 @@ const ButtonAction = ({
         className={buttonClasses}
         onClick={clickHandler}
         type={type === 'submit' ? 'submit' : 'button'}
+        disabled={disabled}
       >
         {label}
       </button>
@@ -39,6 +41,7 @@ const ButtonAction = ({
 
 ButtonAction.defaultProps = {
   type: 'button',
+  disabled: false,
 };
 
 export { ButtonAction };
