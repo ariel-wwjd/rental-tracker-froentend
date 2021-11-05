@@ -1,24 +1,19 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import { useState } from 'react';
 import { useForm, FormProvider } from 'react-hook-form';
-import { fetchAuthUser } from '../../api/loginService/loginService';
 import { ButtonAction } from '../../components/buttonAction';
 import { InputText } from '../../components/inputText';
 import { formValues } from '../../components/types/formTypes';
+import { userGoogleLogin } from '../../store/user/actions';
+import { useAppDispatch } from '../../hooks/useAppDispatch';
 import './home.css';
 
 const Home = () => {
   const [isVisibleFormCode, setIsVisibleFormCode] = useState(false);
+  const dispatch = useAppDispatch();
 
   const validateAuthUser = async () => {
-    try {
-      const response = await fetchAuthUser();
-      if (response && response.data) {
-        console.log('User authenticated: ', response.data);
-      }
-    } catch (error) {
-      console.log('USer not authenticated ', error);
-    }
+    dispatch(userGoogleLogin());
   };
 
   const accessCodeClickHandler = () => {
