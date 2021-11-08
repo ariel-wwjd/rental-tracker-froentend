@@ -1,3 +1,4 @@
+import { cloneDeep } from 'lodash';
 import { createSlice, createSelector } from '@reduxjs/toolkit';
 import { RootSate } from '..';
 import { userGoogleLogin } from './actions';
@@ -34,12 +35,12 @@ export const userSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder.addCase(userGoogleLogin.pending, (state) => {
-      const { ...newState } = { ...state };
+      const newState = cloneDeep(state);
       newState.isLoginInProgress = true;
       return newState;
     });
     builder.addCase(userGoogleLogin.fulfilled, (state, { payload }) => {
-      const { ...newState } = { ...state };
+      const newState = cloneDeep(state);
       const user = payload as IPayload;
       newState.isLoginInProgress = false;
       newState.picture = user.image;
@@ -50,7 +51,7 @@ export const userSlice = createSlice({
       return newState;
     });
     builder.addCase(userGoogleLogin.rejected, (state) => {
-      const { ...newState } = { ...state };
+      const newState = cloneDeep(state);
       newState.isLoginInProgress = false;
       return newState;
     });
