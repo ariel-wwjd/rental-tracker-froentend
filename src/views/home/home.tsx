@@ -71,17 +71,19 @@ const Home = () => {
               error={errors.code?.message || ''}
             />
             <ButtonAction
-              label="GO"
-              color="orange"
+              color="black"
               type="submit"
               onClick={() => {}}
-            />
+            >
+              GO
+            </ButtonAction>
             <ButtonAction
-              label="CANCEL"
-              color="blue"
+              color="blackOutline"
               type="button"
               onClick={() => setIsVisibleFormCode(false)}
-            />
+            >
+              CANCEL
+            </ButtonAction>
           </form>
         </FormProvider>
       </div>
@@ -90,16 +92,22 @@ const Home = () => {
           className="container"
           style={{ display: isVisibleFormCode ? 'none' : 'flex' }}
         >
-          <ButtonAction
-            label="ACCESS CODE"
-            onClick={accessCodeClickHandler}
-            color="black"
-          />
-          <ButtonAction
-            label="LOGIN"
-            onClick={loginHandler}
-            color="blue"
-          />
+          <div className="buttonContainer">
+            <ButtonAction
+              onClick={accessCodeClickHandler}
+              color="blackOutline"
+            >
+              ACCESS CODE
+            </ButtonAction>
+          </div>
+          <div className="buttonContainer">
+            <ButtonAction
+              onClick={loginHandler}
+              color="black"
+            >
+              LOGIN
+            </ButtonAction>
+          </div>
         </div>
       </div>
     </div>

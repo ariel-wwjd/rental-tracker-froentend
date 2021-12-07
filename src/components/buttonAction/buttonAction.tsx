@@ -1,16 +1,17 @@
+/* eslint-disable no-undef */
 import './buttonAction.css';
 import { classNames } from '../../utils';
 
 interface IButtonAction {
-  label: string;
   onClick(): void;
   color: string;
   type?: 'button' | 'submit';
   disabled?: boolean;
+  children: React.ReactNode;
 }
 
 const ButtonAction = ({
-  label, onClick, color, type, disabled,
+  onClick, color, type, disabled, children,
 }: IButtonAction) => {
   const clickHandler = () => {
     onClick();
@@ -19,7 +20,9 @@ const ButtonAction = ({
   const buttonClasses = classNames([
     { class: 'button', hasClass: true },
     { class: 'black', hasClass: color === 'black' },
+    { class: 'blackOutline', hasClass: color === 'blackOutline' },
     { class: 'white', hasClass: color === 'white' },
+    { class: 'whiteOutline', hasClass: color === 'whiteOutline' },
     { class: 'orange', hasClass: color === 'orange' },
     { class: 'blue', hasClass: color === 'blue' },
     { class: 'yellow', hasClass: color === 'yellow' },
@@ -33,7 +36,7 @@ const ButtonAction = ({
         type={type === 'submit' ? 'submit' : 'button'}
         disabled={disabled}
       >
-        {label}
+        {children}
       </button>
     </div>
   );
