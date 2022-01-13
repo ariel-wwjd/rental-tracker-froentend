@@ -3,12 +3,11 @@ import styled from 'styled-components';
 export const StyledHome = styled.div`
   background-color: ${({ theme }) => (theme.BACKGROUND_PRIMARY_COLOR)};
   height: 100%;
-  padding: 12px 24px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   margin: auto;
-`;
+  `;
 
 export const StyledLogo = styled.div`
   color: ${({ theme }) => (theme.LOGO_TEXT_COLOR)};
@@ -17,10 +16,11 @@ export const StyledLogo = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-`;
+  `;
 
 export const StyledFormContainer = styled.div`
   height: 30%;
+  padding: 12px 24px;
   form {
     height: 100%;
     display: flex;
@@ -29,10 +29,11 @@ export const StyledFormContainer = styled.div`
     max-width: 400px;
     margin: auto;
   }
-`;
+  `;
 
 export const StyledActions = styled.div`
-  height: 12%;
+  padding: 12px 24px;
+  height: 16%;
   min-height: 100px;
   .container {
     height: 100%;

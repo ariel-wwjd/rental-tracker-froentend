@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 /* eslint-disable react/jsx-props-no-spreading */
 import { useState } from 'react';
 import { useForm, FormProvider } from 'react-hook-form';
@@ -8,8 +7,11 @@ import { InputText } from '../../components/inputText';
 import { formValues } from '../../components/types/formTypes';
 import { userGoogleLogin } from '../../store/user/actions';
 import { useAppDispatch } from '../../hooks/useAppDispatch';
+import { useAppSelector } from '../../hooks/useAppSelector';
+import { themeSelector, changeTheme } from '../../store/theme/slice';
 import { lightTheme } from '../../themes/light';
 import { darkTheme } from '../../themes/dark';
+import { Navbar } from '../../components/navbar';
 import {
   StyledLogo, StyledFormContainer, StyledActions, StyledHome,
 } from './style';
@@ -17,6 +19,7 @@ import {
 const Home = () => {
   const [isVisibleFormCode, setIsVisibleFormCode] = useState(false);
   const dispatch = useAppDispatch();
+  const { theme } = useAppSelector(themeSelector);
 
   const validateAuthUser = async () => {
     dispatch(userGoogleLogin());
@@ -55,9 +58,16 @@ const Home = () => {
     }
   };
 
+  const navbarItems = [{
+    label: theme,
+    key: 'themeMode',
+    onClick: () => { dispatch(changeTheme()); },
+  }];
+
   return (
-    <ThemeProvider theme={lightTheme}>
+    <ThemeProvider theme={theme === 'Light Mode' ? darkTheme : lightTheme}>
       <StyledHome>
+        <Navbar items={navbarItems} />
         <StyledLogo>KUENTAS</StyledLogo>
         <StyledFormContainer
           style={{ display: isVisibleFormCode ? 'block' : 'none' }}
