@@ -1,16 +1,25 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import { useState } from 'react';
 import { useForm, FormProvider } from 'react-hook-form';
+import { ThemeProvider } from 'styled-components';
 import { ButtonAction } from '../../components/buttonAction';
 import { InputText } from '../../components/inputText';
 import { formValues } from '../../components/types/formTypes';
 import { userGoogleLogin } from '../../store/user/actions';
 import { useAppDispatch } from '../../hooks/useAppDispatch';
-import './home.css';
+import { useAppSelector } from '../../hooks/useAppSelector';
+import { themeSelector, changeTheme } from '../../store/theme/slice';
+import { lightTheme } from '../../themes/light';
+import { darkTheme } from '../../themes/dark';
+import { Navbar } from '../../components/navbar';
+import {
+  StyledLogo, StyledFormContainer, StyledActions, StyledHome,
+} from './style';
 
 const Home = () => {
   const [isVisibleFormCode, setIsVisibleFormCode] = useState(false);
   const dispatch = useAppDispatch();
+  const { theme } = useAppSelector(themeSelector);
 
   const validateAuthUser = async () => {
     dispatch(userGoogleLogin());
@@ -49,68 +58,77 @@ const Home = () => {
     }
   };
 
+  const navbarItems = [{
+    label: theme,
+    key: 'themeMode',
+    onClick: () => { dispatch(changeTheme()); },
+  }];
+
   return (
-    <div className="homeView">
-      <div className="logo">KUENTAS</div>
-      <div
-        className="formContainer"
-        style={{ display: isVisibleFormCode ? 'block' : 'none' }}
-      >
-        <FormProvider {...methods}>
-          <form
-            onSubmit={methods.handleSubmit(onSubmit)}
-            className="form"
-          >
-            <InputText
-              name="code"
-              placeholder="Code"
-              type="text"
-              id="code"
-              required={{ value: true, message: 'Code is empty' }}
-              maxLength={{ value: 4, message: 'at least 4 digits' }}
-              error={errors.code?.message || ''}
-            />
-            <ButtonAction
-              color="black"
-              type="submit"
-              onClick={() => {}}
-            >
-              GO
-            </ButtonAction>
-            <ButtonAction
-              color="blackOutline"
-              type="button"
-              onClick={() => setIsVisibleFormCode(false)}
-            >
-              CANCEL
-            </ButtonAction>
-          </form>
-        </FormProvider>
-      </div>
-      <div className="actions">
-        <div
-          className="container"
-          style={{ display: isVisibleFormCode ? 'none' : 'flex' }}
+    <ThemeProvider theme={theme === 'Light Mode' ? darkTheme : lightTheme}>
+      <StyledHome>
+        <Navbar items={navbarItems} />
+        <StyledLogo>KUENTAS</StyledLogo>
+        <StyledFormContainer
+          style={{ display: isVisibleFormCode ? 'block' : 'none' }}
         >
-          <div className="buttonContainer">
-            <ButtonAction
-              onClick={accessCodeClickHandler}
-              color="blackOutline"
+          <FormProvider {...methods}>
+            <form
+              onSubmit={methods.handleSubmit(onSubmit)}
+              className="form"
             >
-              ACCESS CODE
-            </ButtonAction>
+              <InputText
+                name="code"
+                placeholder="Code"
+                type="text"
+                id="code"
+                required={{ value: true, message: 'Code is empty' }}
+                maxLength={{ value: 4, message: 'at least 4 digits' }}
+                error={errors.code?.message || ''}
+              />
+              <ButtonAction
+                state="primary"
+                type="submit"
+                onClick={() => {}}
+              >
+                GO
+              </ButtonAction>
+              <ButtonAction
+                state="primary"
+                type="button"
+                onClick={() => setIsVisibleFormCode(false)}
+              >
+                CANCEL
+              </ButtonAction>
+            </form>
+          </FormProvider>
+        </StyledFormContainer>
+        <StyledActions>
+          <div
+            className="container"
+            style={{ display: isVisibleFormCode ? 'none' : 'flex' }}
+          >
+            <div className="buttonContainer">
+              <ButtonAction
+                onClick={accessCodeClickHandler}
+                state="secondary"
+              >
+                ACCESS CODE
+              </ButtonAction>
+            </div>
+            <div className="buttonContainer">
+              <ButtonAction
+                onClick={loginHandler}
+                state="primary"
+              >
+                LOGIN
+              </ButtonAction>
+            </div>
           </div>
-          <div className="buttonContainer">
-            <ButtonAction
-              onClick={loginHandler}
-              color="black"
-            >
-              LOGIN
-            </ButtonAction>
-          </div>
-        </div>
-      </div>
-    </div>
+        </StyledActions>
+      </StyledHome>
+
+    </ThemeProvider>
   );
 };
 
