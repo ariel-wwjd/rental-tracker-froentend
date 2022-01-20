@@ -6,5 +6,5 @@ export const StyledNavbar = styled.div`
   height: 36px;
   line-height: 36px;
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
 `;
