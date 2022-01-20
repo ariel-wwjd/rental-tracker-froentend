@@ -24,4 +24,6 @@ export const darkTheme = {
   NAVBAR_BACKGROUND: 'rgba(89, 92, 98, 0.4)',
   NAVBAR_ITEM_TEXT_COLOR: 'rgb(166, 168, 168)',
   NAVBAR_ITEM_TEXT_COLOR_HOVER: 'rgb(222, 222, 222)',
+
+  AVATAR_TEXT_COLOR: 'rgb(166, 168, 168)',
 };

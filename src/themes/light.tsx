@@ -24,4 +24,6 @@ export const lightTheme = {
   NAVBAR_BACKGROUND: 'rgba(89, 92, 98, 0.12)',
   NAVBAR_ITEM_TEXT_COLOR: 'rgb(105, 101, 98)',
   NAVBAR_ITEM_TEXT_COLOR_HOVER: 'rgb(40, 40, 40)',
+
+  AVATAR_TEXT_COLOR: 'rgb(105, 101, 98)',
 };

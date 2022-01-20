@@ -1,7 +1,8 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm, FormProvider } from 'react-hook-form';
 import { ThemeProvider } from 'styled-components';
+import { useHistory } from 'react-router-dom';
 import { ButtonAction } from '../../components/buttonAction';
 import { InputText } from '../../components/inputText';
 import { formValues } from '../../components/types/formTypes';
@@ -9,6 +10,7 @@ import { userGoogleLogin } from '../../store/user/actions';
 import { useAppDispatch } from '../../hooks/useAppDispatch';
 import { useAppSelector } from '../../hooks/useAppSelector';
 import { themeSelector, changeTheme } from '../../store/theme/slice';
+import { userSelector } from '../../store/user/slice';
 import { lightTheme } from '../../themes/light';
 import { darkTheme } from '../../themes/dark';
 import { Navbar } from '../../components/navbar';
@@ -17,20 +19,33 @@ import {
 } from './style';
 
 const Home = () => {
-  const [isVisibleFormCode, setIsVisibleFormCode] = useState(false);
+  const [isVisibleFormEmail, setIsVisibleFormEmail] = useState(false);
   const dispatch = useAppDispatch();
   const { theme } = useAppSelector(themeSelector);
+  const history = useHistory();
+  const user = useAppSelector(userSelector);
+
+  useEffect(() => {
+    if (user.email) {
+      history.push('/users');
+    }
+  }, []);
 
   const validateAuthUser = async () => {
-    dispatch(userGoogleLogin());
+    try {
+      await dispatch(userGoogleLogin());
+      history.push('/users');
+    } catch (error) {
+      console.log({ error });
+    }
   };
 
-  const accessCodeClickHandler = () => {
-    setIsVisibleFormCode(true);
+  const accessEmailClickHandler = () => {
+    setIsVisibleFormEmail(true);
   };
 
   const initialFormValues = {
-    code: '',
+    email: '',
   };
 
   const methods = useForm<formValues>({
@@ -38,7 +53,7 @@ const Home = () => {
   });
   const { errors } = methods.formState;
 
-  const onSubmit = (data: any) => {
+  const onSubmitEmail = (data: any) => {
     console.log({ data });
   };
 
@@ -70,21 +85,20 @@ const Home = () => {
         <Navbar items={navbarItems} />
         <StyledLogo>KUENTAS</StyledLogo>
         <StyledFormContainer
-          style={{ display: isVisibleFormCode ? 'block' : 'none' }}
+          style={{ display: isVisibleFormEmail ? 'block' : 'none' }}
         >
           <FormProvider {...methods}>
             <form
-              onSubmit={methods.handleSubmit(onSubmit)}
-              className="form"
+              onSubmit={methods.handleSubmit(onSubmitEmail)}
             >
               <InputText
-                name="code"
-                placeholder="Code"
-                type="text"
-                id="code"
+                name="email"
+                placeholder="Email"
+                type="email"
+                id="email"
                 required={{ value: true, message: 'Code is empty' }}
                 maxLength={{ value: 4, message: 'at least 4 digits' }}
-                error={errors.code?.message || ''}
+                error={errors.email?.message || ''}
               />
               <ButtonAction
                 state="primary"
@@ -94,9 +108,9 @@ const Home = () => {
                 GO
               </ButtonAction>
               <ButtonAction
-                state="primary"
+                state="secondary"
                 type="button"
-                onClick={() => setIsVisibleFormCode(false)}
+                onClick={() => setIsVisibleFormEmail(false)}
               >
                 CANCEL
               </ButtonAction>
@@ -106,14 +120,14 @@ const Home = () => {
         <StyledActions>
           <div
             className="container"
-            style={{ display: isVisibleFormCode ? 'none' : 'flex' }}
+            style={{ display: isVisibleFormEmail ? 'none' : 'flex' }}
           >
             <div className="buttonContainer">
               <ButtonAction
-                onClick={accessCodeClickHandler}
+                onClick={accessEmailClickHandler}
                 state="secondary"
               >
-                ACCESS CODE
+                ACCESS WITH EMAIL
               </ButtonAction>
             </div>
             <div className="buttonContainer">
