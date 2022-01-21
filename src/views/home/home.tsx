@@ -14,6 +14,7 @@ import { userSelector } from '../../store/user/slice';
 import { lightTheme } from '../../themes/light';
 import { darkTheme } from '../../themes/dark';
 import { Navbar } from '../../components/navbar';
+import { Message } from '../../components/message';
 import {
   StyledLogo, StyledFormContainer, StyledActions, StyledHome,
 } from './style';
@@ -73,6 +74,10 @@ const Home = () => {
     }
   };
 
+  const messageCloseHandler = () => {
+    console.log('CLOSE MESSAGE');
+  };
+
   const navbarItems = [{
     label: theme,
     key: 'themeMode',
@@ -82,6 +87,7 @@ const Home = () => {
   return (
     <ThemeProvider theme={theme === 'Light Mode' ? darkTheme : lightTheme}>
       <StyledHome>
+        <Message timeToClose={5000} onClose={messageCloseHandler} message="Test for the message component" />
         <Navbar items={navbarItems} />
         <StyledLogo>KUENTAS</StyledLogo>
         <StyledFormContainer
