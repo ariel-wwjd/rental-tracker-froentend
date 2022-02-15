@@ -15,6 +15,7 @@ import { lightTheme } from '../../themes/light';
 import { darkTheme } from '../../themes/dark';
 import { Navbar } from '../../components/navbar';
 import { Message } from '../../components/message';
+import { closeMessage, createMessage, messageSelector } from '../../store/message/slice';
 import {
   StyledLogo, StyledFormContainer, StyledActions, StyledHome,
 } from './style';
@@ -25,21 +26,13 @@ const Home = () => {
   const { theme } = useAppSelector(themeSelector);
   const history = useHistory();
   const user = useAppSelector(userSelector);
+  const { message, type } = useAppSelector(messageSelector);
 
   useEffect(() => {
     if (user.email) {
       history.push('/users');
     }
   }, []);
-
-  const validateAuthUser = async () => {
-    try {
-      await dispatch(userGoogleLogin());
-      history.push('/users');
-    } catch (error) {
-      console.log({ error });
-    }
-  };
 
   const accessEmailClickHandler = () => {
     setIsVisibleFormEmail(true);
@@ -59,23 +52,27 @@ const Home = () => {
   };
 
   const loginHandler = async () => {
-    let timer: NodeJS.Timeout | null = null;
     const googleLoginURL = process.env.REACT_APP_GOOGLE_LOGIN_URL;
-    const newWindow = window.open(googleLoginURL, '_blank', 'width=500,height=600');
-    if (newWindow) {
-      timer = setInterval(() => {
-        if (newWindow.closed) {
-          validateAuthUser();
-          if (timer) {
-            clearInterval(timer);
-          }
-        }
-      }, 500);
+    const loginWindow = window.open(googleLoginURL, '_blank', 'width=500,height=600');
+    try {
+      await dispatch(userGoogleLogin());
+      dispatch(createMessage({
+        message: 'User correctly logged',
+        type: 'success',
+      }));
+      history.push('/users');
+    } catch (error) {
+      loginWindow?.close();
+      dispatch(createMessage({
+        message: `Can not login please make sure you are online or try again later
+        Internal Error: ${error}`,
+        type: 'error',
+      }));
     }
   };
 
   const messageCloseHandler = () => {
-    console.log('CLOSE MESSAGE');
+    dispatch(closeMessage());
   };
 
   const navbarItems = [{
@@ -84,10 +81,23 @@ const Home = () => {
     onClick: () => { dispatch(changeTheme()); },
   }];
 
+  const getType = () => {
+    if (type === 'success' || type === 'error' || type === 'warning') {
+      return type;
+    }
+    return undefined;
+  };
+
   return (
     <ThemeProvider theme={theme === 'Light Mode' ? darkTheme : lightTheme}>
       <StyledHome>
-        <Message timeToClose={5000} onClose={messageCloseHandler} message="Test for the message component" />
+        {message && (
+          <Message
+            onClose={messageCloseHandler}
+            message={message}
+            type={getType()}
+          />
+        )}
         <Navbar items={navbarItems} />
         <StyledLogo>KUENTAS</StyledLogo>
         <StyledFormContainer

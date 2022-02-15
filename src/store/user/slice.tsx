@@ -31,6 +31,7 @@ interface IPayload {
   lastName: string;
   image: string;
   googleId: string;
+  status: number;
 }
 
 export const userSlice = createSlice({
@@ -55,6 +56,7 @@ export const userSlice = createSlice({
       newState.googleId = user.googleId;
       return newState;
     });
+    // TODO: make sure this case gets used, it look like never come to this case
     builder.addCase(userGoogleLogin.rejected, (state) => {
       const newState = cloneDeep(state);
       newState.isLoginInProgress = false;

@@ -1,23 +1,16 @@
-import { useState } from 'react';
 import { StyledMessage } from './style';
 
 interface IMessage {
   type?: 'success' | 'error' | 'warning' | undefined;
-  message: string;
-  timeToClose?: number;
+  message: string | undefined;
+  timeToClose?: number | undefined;
   onClose(): void;
 }
 
 const Message = ({
   type, message, timeToClose, onClose,
 } : IMessage) => {
-  const [timer, setTimer] = useState(timeToClose);
-
-  if (timer && timer >= 1000) {
-    setTimeout(() => {
-      setTimer(timer - 1000);
-    }, 1000);
-  } else {
+  if (timeToClose !== undefined && timeToClose < 1000) {
     onClose();
   }
 
@@ -25,18 +18,17 @@ const Message = ({
     <StyledMessage
       type={type}
     >
+      <div className="message-container">
+        <div className="message">{message}</div>
+      </div>
       <button type="button" onClick={onClose}>X</button>
-      <div className="message">{message}</div>
-      {timer
-        ? <div className="counter">{`Close in: ${timer / 1000} seconds`}</div>
-        : <div className="counter" />}
     </StyledMessage>
   );
 };
 
 Message.defaultProps = {
   type: undefined,
-  timeToClose: null,
+  timeToClose: undefined,
 };
 
 export { Message };

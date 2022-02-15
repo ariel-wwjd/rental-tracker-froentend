@@ -9,9 +9,12 @@ import { userSelector } from '../../store/user/slice';
 import { darkTheme } from '../../themes/dark';
 import { lightTheme } from '../../themes/light';
 import { StyledUsers } from './style';
+import { Message } from '../../components/message';
+import { closeMessage, messageSelector } from '../../store/message/slice';
 
 const Users = () => {
   const { theme } = useAppSelector(themeSelector);
+  const { message, type } = useAppSelector(messageSelector);
   const { firstName, picture, email } = useAppSelector(userSelector);
   const dispatch = useAppDispatch();
   const history = useHistory();
@@ -28,9 +31,27 @@ const Users = () => {
     onClick: () => { dispatch(changeTheme()); },
   }];
 
+  const messageCloseHandler = () => {
+    dispatch(closeMessage());
+  };
+
+  const getType = () => {
+    if (type === 'success' || type === 'error' || type === 'warning') {
+      return type;
+    }
+    return undefined;
+  };
+
   return (
     <ThemeProvider theme={theme === 'Light Mode' ? darkTheme : lightTheme}>
       <StyledUsers>
+        {message && (
+          <Message
+            onClose={messageCloseHandler}
+            message={message}
+            type={getType()}
+          />
+        )}
         <Navbar items={navbarItems} userName={firstName} userPicture={picture} />
       </StyledUsers>
     </ThemeProvider>
