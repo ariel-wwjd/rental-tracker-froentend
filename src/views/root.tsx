@@ -4,7 +4,7 @@ import { Users } from './users';
 import { MessageScreen } from './messageScreen';
 import { SuccessLoginScreen } from './successLogin';
 
-const failLoginScreen = <MessageScreen title="Login fail, please try again later" timer={5000} callback={() => {}} />;
+const failLoginScreen = <MessageScreen title="Login fail, please try again later" timer={500} callback={() => {}} />;
 
 const PublicRoute = () => {
   const callback = () => {};

@@ -8,9 +8,7 @@ const httpClient = axios.create({
   withCredentials: true,
 });
 
-httpClient.interceptors.response.use((response: any) => response, (error) => {
-  throw (error.response);
-});
+httpClient.interceptors.response.use((response: any) => response, (error) => error);
 
 export {
   httpClient,
