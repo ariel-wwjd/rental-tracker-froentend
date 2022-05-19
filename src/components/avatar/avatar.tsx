@@ -1,14 +1,25 @@
 import { StyledAvatar } from './style';
 
 interface IAvatar {
-  name: string | undefined;
+  firstName: string | undefined;
+  lastName: string | undefined;
   picture: string | undefined;
 }
 
-const Avatar = ({ name, picture }: IAvatar) => (
+// eslint-disable-next-line no-unused-vars
+const Avatar = ({ firstName, lastName, picture }: IAvatar) => (
   <StyledAvatar>
-    <img src={picture} alt="" />
-    <span>{name}</span>
+    {/* {picture ? <img src={picture} alt="" /> : ( */}
+    <p>
+      {firstName && firstName.charAt(0)}
+      {lastName && lastName.charAt(0)}
+    </p>
+    {/* )} */}
+    <span>
+      {firstName}
+      {' '}
+      {lastName}
+    </span>
   </StyledAvatar>
 );
 
