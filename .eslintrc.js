@@ -25,5 +25,9 @@ module.exports = {
     'import/prefer-default-export': 'off',
     'import/extensions': 'off',
     'import/no-unresolved': 'off',
+    'linebreak-style': 0,
+  },
+  globals: {
+    NodeJS: true,
   },
 };
