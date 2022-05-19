@@ -10,25 +10,31 @@ interface IItem {
 
 interface INavbar {
   items: IItem[];
-  userName?: string;
+  firstName?: string;
+  lastName?: string;
   userPicture?: string;
 }
 
-const Navbar = ({ items, userName, userPicture }:INavbar) => {
+const Navbar = ({
+  items, firstName, lastName, userPicture,
+}:INavbar) => {
   const itemsNavbar = items.map((item) => (
     <NavbarItem label={item.label} onClick={item.onClick} key={item.key} />
   ));
 
   return (
     <StyledNavbar>
-      {userName ? <Avatar name={userName} picture={userPicture} /> : <div />}
+      {firstName
+        ? <Avatar firstName={firstName} lastName={lastName} picture={userPicture} />
+        : <div />}
       {itemsNavbar}
     </StyledNavbar>
   );
 };
 
 Navbar.defaultProps = {
-  userName: '',
+  firstName: '',
+  lastName: '',
   userPicture: '',
 };
 
