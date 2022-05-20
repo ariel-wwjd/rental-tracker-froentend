@@ -12,7 +12,7 @@ import { lightTheme } from '../../themes/light';
 import { StyledUsers } from './style';
 import { Message } from '../../components/message';
 import { closeMessage, messageSelector } from '../../store/message/slice';
-import { UserCardDebt } from '../../components/userCardDebt';
+import { ClientCardDebt } from '../../components/userCardDebt';
 
 const Users = () => {
   const { theme } = useAppSelector(themeSelector);
@@ -48,10 +48,25 @@ const Users = () => {
   const ExamplePendingPayments = [{
     _paymentId: 'string',
     createdAt: '02/02/2022',
-    concept: 'algo',
+    concept: 'Rent for Feb',
     amount: 500,
     picture: undefined,
-  }];
+  },
+  {
+    _paymentId: 'string',
+    createdAt: '03/03/2022',
+    concept: 'Food for Mar',
+    amount: 200,
+    picture: undefined,
+  },
+  {
+    _paymentId: 'string',
+    createdAt: '04/04/2022',
+    concept: 'Apr Wifi service',
+    amount: 300,
+    picture: undefined,
+  },
+  ];
   return (
     <ThemeProvider theme={theme === 'Light Mode' ? darkTheme : lightTheme}>
       <StyledUsers>
@@ -69,11 +84,11 @@ const Users = () => {
           userPicture={picture}
         />
         {/* Aqui va el card */}
-        <UserCardDebt
+        <ClientCardDebt
           firstName="dog"
           lastName={lastName}
           email="dog@gmail.com"
-          showDetail={false}
+          showDetail
           pendingPayments={ExamplePendingPayments}
         />
       </StyledUsers>
