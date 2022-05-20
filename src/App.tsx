@@ -1,10 +1,19 @@
-/* eslint-disable import/extensions */
-/* eslint-disable import/no-unresolved */
-import './App.css';
+import { Provider } from 'react-redux';
+import { ThemeProvider } from 'styled-components';
+import { GlobalStyles } from './globalStyles';
+import { store } from './store';
 import { RootRoute } from './views/root';
+import { commonStyles } from './globalStyles/commonStyles';
 
 function App() {
-  return <RootRoute />;
+  return (
+    <Provider store={store}>
+      <ThemeProvider theme={commonStyles}>
+        <GlobalStyles />
+        <RootRoute />
+      </ThemeProvider>
+    </Provider>
+  );
 }
 
-export default App;
+export { App };

@@ -1,77 +1,164 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm, FormProvider } from 'react-hook-form';
+import { ThemeProvider } from 'styled-components';
+import { useHistory } from 'react-router-dom';
 import { ButtonAction } from '../../components/buttonAction';
 import { InputText } from '../../components/inputText';
 import { formValues } from '../../components/types/formTypes';
-import './home.css';
+import { userGoogleLogin } from '../../store/user/actions';
+import { useAppDispatch } from '../../hooks/useAppDispatch';
+import { useAppSelector } from '../../hooks/useAppSelector';
+import { themeSelector, changeTheme } from '../../store/theme/slice';
+import { userSelector } from '../../store/user/slice';
+import { lightTheme } from '../../themes/light';
+import { darkTheme } from '../../themes/dark';
+import { Navbar } from '../../components/navbar';
+import { Message } from '../../components/message';
+import { closeMessage, createMessage, messageSelector } from '../../store/message/slice';
+import {
+  StyledLogo, StyledFormContainer, StyledActions, StyledHome,
+} from './style';
 
 const Home = () => {
-  const [isVisibleFormCode, setIsVisibleFormCode] = useState(false);
+  const [isVisibleFormEmail, setIsVisibleFormEmail] = useState(false);
+  const dispatch = useAppDispatch();
+  const { theme } = useAppSelector(themeSelector);
+  const history = useHistory();
+  const user = useAppSelector(userSelector);
+  const { message, type } = useAppSelector(messageSelector);
 
-  const accessCodeClickHandler = () => {
-    setIsVisibleFormCode(true);
+  useEffect(() => {
+    if (user.email) {
+      history.push('/users');
+    }
+  }, []);
+
+  const accessEmailClickHandler = () => {
+    setIsVisibleFormEmail(true);
   };
 
   const initialFormValues = {
-    code: '',
+    email: '',
   };
 
-  const methods = useForm<formValues>({ defaultValues: initialFormValues });
+  const methods = useForm<formValues>({
+    defaultValues: initialFormValues,
+  });
   const { errors } = methods.formState;
 
-  const onSubmit = (data: any) => {
-    // eslint-disable-next-line no-console
+  const onSubmitEmail = (data: any) => {
     console.log({ data });
   };
+
+  const loginHandler = async () => {
+    const googleLoginURL = process.env.REACT_APP_GOOGLE_LOGIN_URL;
+    const loginWindow = window.open(googleLoginURL, '_blank', 'width=500,height=600');
+    try {
+      await dispatch(userGoogleLogin());
+      dispatch(createMessage({
+        message: 'User correctly logged',
+        type: 'success',
+      }));
+      history.push('/users');
+    } catch (error) {
+      loginWindow?.close();
+      dispatch(createMessage({
+        message: `Can not login please make sure you are online or try again later
+        Internal Error: ${error}`,
+        type: 'error',
+      }));
+    }
+  };
+
+  const messageCloseHandler = () => {
+    dispatch(closeMessage());
+  };
+
+  const navbarItems = [{
+    label: theme,
+    key: 'themeMode',
+    onClick: () => { dispatch(changeTheme()); },
+  }];
+
+  const getType = () => {
+    if (type === 'success' || type === 'error' || type === 'warning') {
+      return type;
+    }
+    return undefined;
+  };
+
   return (
-    <div className="homeView">
-      <div className="logo">KUENTAS</div>
-      <div className="formContainer" style={{ display: isVisibleFormCode ? 'block' : 'none' }}>
-        <FormProvider {...methods}>
-          <form
-            onSubmit={methods.handleSubmit(onSubmit)}
-            className="form"
+    <ThemeProvider theme={theme === 'Light Mode' ? darkTheme : lightTheme}>
+      <StyledHome>
+        {message && (
+          <Message
+            onClose={messageCloseHandler}
+            message={message}
+            type={getType()}
+          />
+        )}
+        <Navbar items={navbarItems} />
+        <StyledLogo>KUENTAS</StyledLogo>
+        <StyledFormContainer
+          style={{ display: isVisibleFormEmail ? 'block' : 'none' }}
+        >
+          <FormProvider {...methods}>
+            <form
+              onSubmit={methods.handleSubmit(onSubmitEmail)}
+            >
+              <InputText
+                name="email"
+                placeholder="Email"
+                type="email"
+                id="email"
+                required={{ value: true, message: 'Code is empty' }}
+                maxLength={{ value: 4, message: 'at least 4 digits' }}
+                error={errors.email?.message || ''}
+              />
+              <ButtonAction
+                state="primary"
+                type="submit"
+                onClick={() => {}}
+              >
+                GO
+              </ButtonAction>
+              <ButtonAction
+                state="secondary"
+                type="button"
+                onClick={() => setIsVisibleFormEmail(false)}
+              >
+                CANCEL
+              </ButtonAction>
+            </form>
+          </FormProvider>
+        </StyledFormContainer>
+        <StyledActions>
+          <div
+            className="container"
+            style={{ display: isVisibleFormEmail ? 'none' : 'flex' }}
           >
-            <InputText
-              name="code"
-              placeholder="Code"
-              type="text"
-              id="code"
-              required={{ value: true, message: 'Code is empty' }}
-              maxLength={{ value: 4, message: 'at least 4 digits' }}
-              error={errors.code?.message || ''}
-            />
-            <ButtonAction
-              label="GO"
-              color="orange"
-              type="submit"
-              onClick={() => {}}
-            />
-            <ButtonAction
-              label="CANCEL"
-              color="blue"
-              type="button"
-              onClick={() => setIsVisibleFormCode(false)}
-            />
-          </form>
-        </FormProvider>
-      </div>
-      <div className="actions">
-        <div className="container" style={{ display: isVisibleFormCode ? 'none' : 'flex' }}>
-          <ButtonAction
-            label="ACCESS CODE"
-            onClick={accessCodeClickHandler}
-            color="black"
-          />
-          <ButtonAction
-            label="LOGIN WITH GOOGLE"
-            onClick={accessCodeClickHandler}
-            color="blue"
-          />
-        </div>
-      </div>
-    </div>
+            <div className="buttonContainer">
+              <ButtonAction
+                onClick={accessEmailClickHandler}
+                state="secondary"
+              >
+                ACCESS WITH EMAIL
+              </ButtonAction>
+            </div>
+            <div className="buttonContainer">
+              <ButtonAction
+                onClick={loginHandler}
+                state="primary"
+              >
+                LOGIN
+              </ButtonAction>
+            </div>
+          </div>
+        </StyledActions>
+      </StyledHome>
+
+    </ThemeProvider>
   );
 };
 

@@ -1,44 +1,37 @@
-import './buttonAction.css';
-import { classNames } from '../../utils';
+/* eslint-disable no-undef */
+import { StyledButton } from './style';
 
 interface IButtonAction {
-  label: string;
   onClick(): void;
-  color: string;
+  state?: 'primary' | 'secondary';
   type?: 'button' | 'submit';
+  disabled?: boolean;
+  children: React.ReactNode;
 }
 
 const ButtonAction = ({
-  label, onClick, color, type,
+  onClick, state, type, disabled, children,
 }: IButtonAction) => {
   const clickHandler = () => {
     onClick();
   };
 
-  const buttonClasses = classNames([
-    { class: 'button', hasClass: true },
-    { class: 'black', hasClass: color === 'black' },
-    { class: 'white', hasClass: color === 'white' },
-    { class: 'orange', hasClass: color === 'orange' },
-    { class: 'blue', hasClass: color === 'blue' },
-    { class: 'yellow', hasClass: color === 'yellow' },
-  ]);
-
   return (
-    <div className="actionButton">
-      <button
-        className={buttonClasses}
-        onClick={clickHandler}
-        type={type === 'submit' ? 'submit' : 'button'}
-      >
-        {label}
-      </button>
-    </div>
+    <StyledButton
+      onClick={clickHandler}
+      state={state === 'primary' ? 'primary' : 'secondary'}
+      type={type === 'submit' ? 'submit' : 'button'}
+      disabled={disabled}
+    >
+      {children}
+    </StyledButton>
   );
 };
 
 ButtonAction.defaultProps = {
   type: 'button',
+  disabled: false,
+  state: 'primary',
 };
 
 export { ButtonAction };

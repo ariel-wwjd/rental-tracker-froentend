@@ -1,8 +1,7 @@
 /* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable jsx-a11y/no-autofocus */
-import './inputText.css';
 import { useFormContext } from 'react-hook-form';
-import { classNames } from '../../utils';
+import { StyledInputText } from './style';
 
 interface IInputText {
   placeholder: string;
@@ -25,15 +24,12 @@ const InputText = ({
   error,
 }: IInputText) => {
   const { register } = useFormContext();
-  const inputClasses = classNames([
-    { class: 'input', hasClass: true },
-    { class: 'hasError', hasClass: !!error },
-  ]);
 
   return (
-    <div className="inputTextComponent">
+    <StyledInputText
+      error={!!error}
+    >
       <input
-        className={inputClasses}
         autoFocus={autoFocus}
         placeholder={placeholder}
         type={type}
@@ -43,10 +39,10 @@ const InputText = ({
           minLength: { value: 4, message: 'The code needs at least 4 digits' },
         })}
       />
-      <div className="error">
+      <div>
         {error && <span>{error}</span>}
       </div>
-    </div>
+    </StyledInputText>
   );
 };
 
