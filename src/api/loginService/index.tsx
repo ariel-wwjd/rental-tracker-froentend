@@ -1,1 +1,1 @@
-export { googleLoginUser } from './loginService';
+export { googleLoginUser, user } from './loginService';

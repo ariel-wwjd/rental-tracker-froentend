@@ -48,12 +48,12 @@ export const userSlice = createSlice({
       const newState = cloneDeep(state);
       const user = payload as IPayload;
       newState.isLoginInProgress = false;
-      newState.id = user._id;
-      newState.picture = user.image;
-      newState.email = user.email;
-      newState.firstName = user.firstName;
-      newState.lastName = user.lastName;
-      newState.googleId = user.googleId;
+      newState.id = user?._id;
+      newState.picture = user?.image;
+      newState.email = user?.email;
+      newState.firstName = user?.firstName;
+      newState.lastName = user?.lastName;
+      newState.googleId = user?.googleId;
       return newState;
     });
     // TODO: make sure this case gets used, it look like never come to this case
