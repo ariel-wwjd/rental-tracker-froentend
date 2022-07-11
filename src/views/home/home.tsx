@@ -7,23 +7,24 @@ import { useForm, FormProvider } from 'react-hook-form';
 import { ThemeProvider } from 'styled-components';
 import { useHistory } from 'react-router-dom';
 import jwtDecode from 'jwt-decode';
+import { useTranslation } from 'react-i18next';
 import { ButtonAction } from '../../components/buttonAction';
 import { InputText } from '../../components/inputText';
 import { formValues } from '../../components/types/formTypes';
 import { useAppDispatch } from '../../hooks/useAppDispatch';
 import { useAppSelector } from '../../hooks/useAppSelector';
-import { themeSelector, changeTheme } from '../../store/theme/slice';
+import { appSetupSelector } from '../../store/appSetup/slice';
 import { userSelector } from '../../store/user/slice';
 import { lightTheme } from '../../themes/light';
 import { darkTheme } from '../../themes/dark';
 import { Navbar } from '../../components/navbar';
 import { Message } from '../../components/message';
 import { closeMessage, createMessage, messageSelector } from '../../store/message/slice';
+import { userReview } from '../../store/user/actions';
 import { userGoogle } from '../../components/types/googleTypes';
 import {
   StyledLogo, StyledFormContainer, StyledActions, StyledHome,
 } from './style';
-import { userReview } from '../../store/user/actions';
 
 export declare const google: {
   accounts: {
@@ -41,18 +42,20 @@ export declare const google: {
 const Home = () => {
   const [isVisibleFormEmail, setIsVisibleFormEmail] = useState(false);
   const dispatch = useAppDispatch();
-  const { theme } = useAppSelector(themeSelector);
+  const [textFor] = useTranslation('home');
+  const { theme } = useAppSelector(appSetupSelector);
   const history = useHistory();
-  const user = useAppSelector(userSelector);
+  const userSelectorData = useAppSelector(userSelector);
+  const { user } = userSelectorData;
   const { message, type } = useAppSelector(messageSelector);
 
   const googleButtonTheme = theme === 'Light Mode' ? 'filled_black' : 'outline';
 
   useEffect(() => {
-    if (user.email) {
+    if (user.email !== '') {
       history.push('/users');
     }
-  }, []);
+  }, [user]);
 
   const handleCallbackResponse = (response: any) => {
     try {
@@ -121,12 +124,6 @@ const Home = () => {
     dispatch(closeMessage());
   };
 
-  const navbarItems = [{
-    label: theme,
-    key: 'themeMode',
-    onClick: () => { dispatch(changeTheme()); },
-  }];
-
   const getType = () => {
     if (type === 'success' || type === 'error' || type === 'warning') {
       return type;
@@ -144,7 +141,7 @@ const Home = () => {
             type={getType()}
           />
         )}
-        <Navbar items={navbarItems} />
+        <Navbar />
         <StyledLogo>KUENTAS</StyledLogo>
         <StyledFormContainer
           style={{ display: isVisibleFormEmail ? 'block' : 'none' }}
@@ -167,14 +164,14 @@ const Home = () => {
                 type="submit"
                 onClick={() => {}}
               >
-                GO
+                {textFor('emailAccessButton')}
               </ButtonAction>
               <ButtonAction
                 state="secondary"
                 type="button"
                 onClick={() => setIsVisibleFormEmail(false)}
               >
-                CANCEL
+                {textFor('emailCancelButton')}
               </ButtonAction>
             </form>
           </FormProvider>
@@ -189,7 +186,8 @@ const Home = () => {
                 onClick={accessEmailClickHandler}
                 state="secondary"
               >
-                ACCESS WITH EMAIL
+                {/* ACCESS WITH EMAIL */}
+                {textFor('accessWithEmailButton')}
               </ButtonAction>
             </div>
             <div className="buttonContainer">
