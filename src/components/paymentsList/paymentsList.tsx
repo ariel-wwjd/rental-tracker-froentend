@@ -19,8 +19,6 @@ const PaymentsList = ({
   );
 
   const updateShowMorePayments = (id: string): void => {
-    console.log(showMorePayments);
-
     const existingId = showMorePayments.find(
       (idInArray) => (idInArray === id),
     );

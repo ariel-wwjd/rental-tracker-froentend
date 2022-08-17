@@ -1,5 +1,16 @@
+import { useTranslation } from 'react-i18next';
 import { IPayment } from '../types/userTypes';
-import { StyledPayment, StyledImageContainer } from './style';
+import {
+  StyledPayment,
+  StyledImageContainer,
+  StyledDateConceptContainer,
+  StyledAmountContainer,
+  StyledDataContainer,
+  StyledBar,
+  StyledContainerPaymentInfo,
+  StyledImage,
+  StyledImageText,
+} from './style';
 
 export interface IPaymentComponent extends IPayment {
   showMore: boolean;
@@ -10,24 +21,32 @@ export interface IPaymentComponent extends IPayment {
 const Payment = ({
   _id, amount, concept, currency, createdAt, picture, showMore, onClick,
 }: IPaymentComponent) => {
-  // const clickHandler = () => {
-  //   onClick(_id);
-  // };
-  console.log(currency);
+  const [textFor] = useTranslation('clientCard');
+
+  const clickHandler = (event: any) => {
+    onClick(_id);
+    event.stopPropagation();
+  };
 
   return (
-    <StyledPayment onClick={() => (onClick(_id))}>
-      <div>
-        <span>{concept}</span>
-        <span>{amount}</span>
-        <span>{currency}</span>
-      </div>
-      {/* {showMore && ( */}
-      <StyledImageContainer showMore={showMore} hasImage={picture !== ''}>
-        {picture ? <img src={picture} alt="" /> : <></>}
-        <span>{createdAt}</span>
-      </StyledImageContainer>
-      {/* )} */}
+    <StyledPayment onClick={(event) => (clickHandler(event))}>
+      <StyledBar />
+      <StyledContainerPaymentInfo>
+        <StyledDataContainer>
+          <StyledDateConceptContainer>
+            <div>{new Date(createdAt).toDateString()}</div>
+            <div>{concept}</div>
+          </StyledDateConceptContainer>
+          <StyledAmountContainer>
+            <div>{`${amount} ${currency}`}</div>
+          </StyledAmountContainer>
+        </StyledDataContainer>
+        <StyledImageContainer showMore={showMore} hasImage={picture !== ''}>
+          {picture
+            ? <StyledImage src={picture} alt="" />
+            : <StyledImageText>{textFor('imageText')}</StyledImageText>}
+        </StyledImageContainer>
+      </StyledContainerPaymentInfo>
     </StyledPayment>
   );
 };

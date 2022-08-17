@@ -1,9 +1,7 @@
-/* eslint-disable no-unused-vars */
 /* eslint-disable no-underscore-dangle */
 import { useEffect } from 'react';
 import { ThemeProvider } from 'styled-components';
 import { useHistory } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
 import { Navbar } from '../../components/navbar';
 import { useAppDispatch } from '../../hooks/useAppDispatch';
 import { useAppSelector } from '../../hooks/useAppSelector';
@@ -14,14 +12,12 @@ import { lightTheme } from '../../themes/light';
 import { StyledUsers } from './style';
 import { Message } from '../../components/message';
 import { closeMessage, messageSelector } from '../../store/message/slice';
-import { ClientCard } from '../../components/clientCard';
+import { ClientCardList } from '../../components/ClientCardList';
 
 const Users = () => {
   const { theme } = useAppSelector(appSetupSelector);
   const { message, type } = useAppSelector(messageSelector);
   const { user } = useAppSelector(userSelector);
-
-  const [textFor] = useTranslation('user');
 
   const {
     firstName, lastName, image, email,
@@ -29,7 +25,9 @@ const Users = () => {
   const dispatch = useAppDispatch();
   const history = useHistory();
 
-  console.log(user);
+  if (email === '') {
+    history.push('/');
+  }
 
   useEffect(() => {
     if (email === '') {
@@ -63,15 +61,7 @@ const Users = () => {
           lastName={lastName}
           userPicture={image}
         />
-        {/* {textFor('greeting')} */}
-        <ClientCard
-          _id={user._id}
-          createdAt={user.createdAt}
-          email={user.email}
-          firstName={user.firstName}
-          lastName={user.lastName}
-          pendingPayments={user.clients[0].pendingPayments}
-        />
+        <ClientCardList clients={user.clients} />
       </StyledUsers>
     </ThemeProvider>
   );
