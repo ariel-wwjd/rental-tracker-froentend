@@ -31,4 +31,6 @@ interface IUserResponse {
 
 export type {
   IUserResponse,
+  IClients,
+  IPayment,
 };

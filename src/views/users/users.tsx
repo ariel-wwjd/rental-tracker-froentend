@@ -1,7 +1,7 @@
+/* eslint-disable no-underscore-dangle */
 import { useEffect } from 'react';
 import { ThemeProvider } from 'styled-components';
 import { useHistory } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
 import { Navbar } from '../../components/navbar';
 import { useAppDispatch } from '../../hooks/useAppDispatch';
 import { useAppSelector } from '../../hooks/useAppSelector';
@@ -12,15 +12,12 @@ import { lightTheme } from '../../themes/light';
 import { StyledUsers } from './style';
 import { Message } from '../../components/message';
 import { closeMessage, messageSelector } from '../../store/message/slice';
+import { ClientCardList } from '../../components/ClientCardList';
 
 const Users = () => {
   const { theme } = useAppSelector(appSetupSelector);
   const { message, type } = useAppSelector(messageSelector);
-  const [textFor] = useTranslation('user');
-
-  const {
-    user,
-  } = useAppSelector(userSelector);
+  const { user } = useAppSelector(userSelector);
 
   const {
     firstName, lastName, image, email,
@@ -28,8 +25,12 @@ const Users = () => {
   const dispatch = useAppDispatch();
   const history = useHistory();
 
+  if (email === '') {
+    history.push('/');
+  }
+
   useEffect(() => {
-    if (!email) {
+    if (email === '') {
       history.push('/');
     }
   }, []);
@@ -60,7 +61,7 @@ const Users = () => {
           lastName={lastName}
           userPicture={image}
         />
-        {textFor('greeting')}
+        <ClientCardList clients={user.clients} />
       </StyledUsers>
     </ThemeProvider>
   );
