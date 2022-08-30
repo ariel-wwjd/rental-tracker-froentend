@@ -1,13 +1,13 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { googleLoginUser } from '../../api/loginService';
+import { user } from '../../api/loginService';
+import { userGoogleAdapted } from '../../components/types/googleTypes';
 
-export const userGoogleLogin = createAsyncThunk(
-  'auth/login/google',
-  async () => {
+export const userReview = createAsyncThunk(
+  'user',
+  async (userFromGoogle : userGoogleAdapted) => {
     try {
-      const response = await googleLoginUser();
-      const { data } = response;
-      return data;
+      const response = await user(userFromGoogle);
+      return response.data;
     } catch (error) {
       return error;
     }
