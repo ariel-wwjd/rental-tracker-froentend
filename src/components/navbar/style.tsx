@@ -8,3 +8,6 @@ export const StyledNavbar = styled.div`
   display: flex;
   justify-content: space-between;
 `;
+
+export const StyledNavbarContainer = styled.div`
+`;
